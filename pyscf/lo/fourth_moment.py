@@ -76,7 +76,7 @@ class FourthMoment(boys.OrbitalLocalizer):
             to 'atomic', atomic orbitals will be used as initial guess.
             Default 'atomic'
         exponent : int
-            The power to define norm. It can be 2 or 4. Default 2.
+            The power to define norm. It can be any integer >= 1. Default 2.
 
     Saved results
 
