@@ -219,61 +219,61 @@ class FourthMoment(boys.OrbitalLocalizer):
             x_x_ints_d_y_ints_d_y_ints_d = numpy.einsum("xi,yi,yi->xi", r_ints_d, r_ints_d, r_ints_d)
             x_xy_ints_d_y_ints_d = numpy.einsum("xyi,yi->xi", rr_ints_d, r_ints_d)
             interm1 = 8 * (
-                x_yy_ints_d_x_ints_d 
-                - r3_ints_d 
-                - 3 * x_x_ints_d_y_ints_d_y_ints_d 
+                x_yy_ints_d_x_ints_d
+                - r3_ints_d
+                - 3 * x_x_ints_d_y_ints_d_y_ints_d
                 + 2 * x_xy_ints_d_y_ints_d
             )
 
         x_f0_xxx_intermed = numpy.einsum("j,xj->xj", f0, rrr_intermed)
         x_yy_ints_f0_x_ints_d = numpy.einsum(
-            "xij,j,yj->yij", 
-            xx_ints, 
-            f0, 
-            r_ints_d, 
+            "xij,j,yj->yij",
+            xx_ints,
+            f0,
+            r_ints_d,
             optimize=['einsum_path', (1, 2), (0, 1)],
         )
         x_xy_ints_f0_y_ints_d = numpy.einsum(
-            "xyij,j,xj->yij", 
-            rr_ints, 
-            f0, 
-            r_ints_d, 
+            "xyij,j,xj->yij",
+            rr_ints,
+            f0,
+            r_ints_d,
             optimize=['einsum_path', (1, 2), (0, 1)],
         )
         x_x3_ints_f0 = numpy.einsum("xij,j->xij", r3_ints, f0)
         x_x_ints_f0_yy_ints_d = numpy.einsum(
-                "xij,j,yj->xij", 
-                r_ints, 
-                f0, 
-                xx_ints_d, 
+                "xij,j,yj->xij",
+                r_ints,
+                f0,
+                xx_ints_d,
                 optimize=['einsum_path', (1, 2), (0, 1)],
-            )
+        )
         x_y_ints_f0_y_ints_d_x_ints_d = numpy.einsum(
-                "xij,j,xj,yj->yij", 
-                r_ints, 
-                f0, 
-                r_ints_d, 
-                r_ints_d, 
+                "xij,j,xj,yj->yij",
+                r_ints,
+                f0,
+                r_ints_d,
+                r_ints_d,
                 optimize=['einsum_path', (1, 3), (1, 2), (0, 1)]
-            )
+        )
         x_y_ints_f0_xy_ints_d = numpy.einsum(
-                "xij,j,xyj->yij", 
-                r_ints, 
-                f0, 
-                rr_ints_d, 
+                "xij,j,xyj->yij",
+                r_ints,
+                f0,
+                rr_ints_d,
                 optimize=['einsum_path', (1, 2), (0, 1)]
-            )
+        )
         x_x_ints_f0_y_ints_d_y_ints_d = numpy.einsum(
-                "xij,j,yj,yj->xij", 
-                r_ints, 
-                f0, 
-                r_ints_d, 
-                r_ints_d,  
+                "xij,j,yj,yj->xij",
+                r_ints,
+                f0,
+                r_ints_d,
+                r_ints_d,
                 optimize=['einsum_path', (2, 3), (1, 2), (0, 1)],
-            )
+        )
         interm2 = 8 * (
             x_yy_ints_f0_x_ints_d
-            + 2 * x_xy_ints_f0_y_ints_d 
+            + 2 * x_xy_ints_f0_y_ints_d
             - x_x3_ints_f0
             + x_x_ints_f0_yy_ints_d # wrong prefactor in paper
             - 6 * x_y_ints_f0_y_ints_d_x_ints_d
@@ -283,32 +283,32 @@ class FourthMoment(boys.OrbitalLocalizer):
 
         x_x_int_d_x_int_d = 4 * numpy.einsum("yi,yi->i", r_ints_d, r_ints_d)
         xy_x_int_d_y_int_d = 8 * numpy.einsum("xi,yi->xyi", r_ints_d, r_ints_d)
-        
+
         r_ints_f0_r_ints_d = 8 * numpy.einsum(
-            "xij,j,xj->ij", 
-            r_ints, 
-            f0, 
-            r_ints_d, 
+            "xij,j,xj->ij",
+            r_ints,
+            f0,
+            r_ints_d,
             optimize=['einsum_path', (1, 2), (0, 1)],
         )
         f0_r_ints_d_r_ints_d = 4 * numpy.einsum(
-            "j,yj,yj->j", 
-            f0, 
-            r_ints_d, 
+            "j,yj,yj->j",
+            f0,
+            r_ints_d,
             r_ints_d,
             optimize=['einsum_path', (1, 2), (0, 1)],
         )
         xy_x_ints_f0_y_ints_d = 16 * numpy.einsum(
-            "xij,j,yj->xyij", 
-            r_ints, 
-            f0, 
-            r_ints_d, 
+            "xij,j,yj->xyij",
+            r_ints,
+            f0,
+            r_ints_d,
             optimize=['einsum_path', (1, 2), (0, 1)],
         )
         xy_f0_x_ints_d_y_ints_d = 8 * numpy.einsum(
-            "j,xj,yj->xyj",  
-            f0, 
-            r_ints_d, 
+            "j,xj,yj->xyj",
+            f0,
+            r_ints_d,
             r_ints_d,
             optimize=['einsum_path', (0, 1), (0, 1)],
         )
@@ -319,17 +319,17 @@ class FourthMoment(boys.OrbitalLocalizer):
         if self.exponent > 1:
             xy_ints_x_ints_d_y_ints_d = numpy.einsum(
                 "xyij,xj,yj->ij",
-                rr_ints,  
-                r_ints_d, 
-                r_ints_d, 
+                rr_ints,
+                r_ints_d,
+                r_ints_d,
                 optimize=['einsum_path', (1, 2), (0, 1)],
             )
             x_ints_xxx_intermed = numpy.einsum("xij,xj->ij", r_ints, rrr_intermed)
             xx_ints_y_ints_d_y_ints_d = numpy.einsum(
-                "xij,yj,yj->ij", 
-                xx_ints, 
+                "xij,yj,yj->ij",
+                xx_ints,
                 r_ints_d,
-                r_ints_d, 
+                r_ints_d,
                 optimize=['einsum_path', (1, 2), (0, 1)],
             )
             x3_ints_x_ints_d = numpy.einsum("xij,xj->ij", r3_ints, r_ints_d)
