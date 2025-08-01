@@ -381,7 +381,17 @@ ALIAS = {
     'dyallv2z' : 'dyall-basis.dyall_v2z',
     'dyallv3z' : 'dyall-basis.dyall_v3z',
     'dyallv4z' : 'dyall-basis.dyall_v4z',
+# SAP
+    'sapgraspsmall'   : 'sap_grasp_small.dat',
+    'sapgrasplarge'   : 'sap_grasp_large.dat',
 }
+
+USER_BASIS_DIR = getattr(__config__, 'USER_BASIS_DIR', '')
+USER_BASIS_ALIAS = getattr(__config__, 'USER_BASIS_ALIAS', {})
+USER_GTH_ALIAS = getattr(__config__, 'USER_GTH_ALIAS', {})
+
+if USER_BASIS_ALIAS.keys() & ALIAS.keys():
+    raise KeyError('USER_BASIS_ALIAS keys conflict with predefined basis sets')
 
 GTH_ALIAS = {
     'gthaugdzvp'  : 'gth-aug-dzvp.dat',
@@ -407,6 +417,9 @@ GTH_ALIAS = {
     'gthdzvpmoloptsr'   : 'gth-dzvp-molopt-sr.dat',
 }
 
+if USER_GTH_ALIAS.keys() & GTH_ALIAS.keys():
+    raise KeyError('USER_GTH_ALIAS keys conflict with predefined GTH basis sets')
+
 PP_ALIAS = {
     'gthblyp'    : 'gth-blyp.dat'   ,
     'gthbp'      : 'gth-bp.dat'     ,
@@ -419,11 +432,6 @@ PP_ALIAS = {
     'gthpbesol'  : 'gth-pbesol.dat' ,
     'gthhf'      : 'gth-hf.dat'     ,
     'gthhfrev'   : 'gth-hf-rev.dat' ,
-}
-
-SAP_ALIAS = {
-    'sapgraspsmall'   : 'sap_grasp_small.dat',
-    'sapgrasplarge'   : 'sap_grasp_large.dat',
 }
 
 def _is_pople_basis(basis):
@@ -610,14 +618,19 @@ def load(filename_or_basisname, symb, optimize=OPTIMIZE_CONTRACTION):
     basis_dir = _BASIS_DIR
     if name in ALIAS:
         basmod = ALIAS[name]
+    elif name in USER_BASIS_ALIAS:
+        basmod = USER_BASIS_ALIAS[name]
+        basis_dir = USER_BASIS_DIR
     elif name in GTH_ALIAS:
         basmod = GTH_ALIAS[name]
         fload = parse_cp2k.load
         basis_dir = _GTH_BASIS_DIR
+    elif name in USER_GTH_ALIAS:
+        basmod = USER_GTH_ALIAS[name]
+        fload = parse_cp2k.load
+        basis_dir = USER_BASIS_DIR
     elif _is_pople_basis(name):
         basmod = _parse_pople_basis(name, symb)
-    elif name in SAP_ALIAS:
-        basmod = SAP_ALIAS[name]
     else:
         try:
             return parse_nwchem.parse(filename_or_basisname, symb,

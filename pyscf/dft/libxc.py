@@ -97,7 +97,6 @@ def print_XC_CODES():
     for name, func_id in xc_codes.items():
         refs = xc_reference(func_id)
         key = f"'{name}'"
-        print(key, func_id)
         print(f'{key:<31s}: {func_id:<3d}, # {refs[0]}')
         for r in refs[1:]:
             print(f"                                      # {r}")
@@ -583,7 +582,7 @@ def parse_xc(description):
                                 x_id = possible_xc.pop()
                             sys.stderr.write('XC parser takes %s\n' % x_id)
                             sys.stderr.write('You can add prefix to %s for a '
-                                             'specific functional (e.g. X_%s, '
+                                             'specific functional (e.g. GGA_X_%s, '
                                              'HYB_MGGA_X_%s)\n'
                                              % (key, key, key))
                         else:
@@ -1085,7 +1084,7 @@ def _eval_xc(xc_code, rho, spin=0, deriv=1, omega=None):
                             ctypes.c_double(density_threshold))
     return out
 
-def eval_xc_eff(xc_code, rho, deriv=1, omega=None):
+def eval_xc_eff(xc_code, rho, deriv=1, omega=None, spin=None):
     r'''Returns the derivative tensor against the density parameters
 
     [density_a, (nabla_x)_a, (nabla_y)_a, (nabla_z)_a, tau_a]
@@ -1109,17 +1108,21 @@ def eval_xc_eff(xc_code, rho, deriv=1, omega=None):
             derivative orders
         omega: float
             define the exponent in the attenuated Coulomb for RSH functional
+        spin : int
+            spin polarized if spin > 0
     '''
     xctype = xc_type(xc_code)
     rho = numpy.asarray(rho, order='C', dtype=numpy.double)
     if xctype == 'MGGA' and rho.shape[-2] == 6:
         rho = numpy.asarray(rho[...,[0,1,2,3,5],:], order='C')
 
-    spin_polarized = rho.ndim >= 2 and rho.shape[0] == 2
-    if spin_polarized:
-        spin = 1
-    else:
-        spin = 0
+    if spin is None:
+        spin_polarized = rho.ndim >= 2 and rho.shape[0] == 2
+        if spin_polarized:
+            spin = 1
+        else:
+            spin = 0
+
     out = eval_xc1(xc_code, rho, spin, deriv, omega)
     return xc_deriv.transform_xc(rho, out, xctype, spin, deriv)
 
